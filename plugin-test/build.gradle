@@ -1,0 +1,91 @@
+buildscript {
+    repositories {
+        mavenLocal()
+
+        dependencies {
+            classpath 'me.mattstudios.triumph:me.mattstudios.triumph.gradle.plugin:0.1.79-SNAPSHOT'
+        }
+    }
+}
+
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.4.0'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
+}
+
+group 'org.example'
+version '1.0'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+
+    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    // Spigot
+    compileOnly "org.spigotmc:spigot-api:1.16.2-R0.1-SNAPSHOT"
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+compileJava {
+    options.compilerArgs += ["-parameters"]
+    options.fork = true
+    options.forkOptions.executable = 'javac'
+    options.encoding = 'UTF-8'
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8
+    kotlinOptions.javaParameters = true
+}
+
+shadowJar {
+    relocate("kotlin", "me.mattstudios.triumphchat.kotlin")
+
+    archiveFileName = "TestPlugin-${project.version}.jar"
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+apply plugin: 'me.mattstudios.triumph'
+
+bukkit {
+
+    main = "me.mattstudios.plugin.MainClass"
+    name = "TestPlugin"
+    version = project.version
+    description = "A test plugin"
+    load = "POSTWORLD"
+    author = ["md_5"]
+    website = "spigotmc.org"
+
+    commands {
+
+        command("foo") {
+            description = "Foo command"
+            aliases = ["foobar", "fubar"]
+            permission = "test.foo"
+            permissionMessage = "You do not have permission!"
+            usage = "/<command> [test|stop]"
+        }
+
+    }
+
+    permissions {
+
+        permission("foo") {
+            description = "Foo command"
+            //default = ""
+        }
+
+    }
+
+}

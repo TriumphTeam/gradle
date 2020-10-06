@@ -1,0 +1,4 @@
+rootProject.name = 'mf-gradle-plugin'
+
+include 'plugin'
+include 'plugin-test'
