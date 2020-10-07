@@ -1,4 +1,6 @@
-rootProject.name = 'mf-gradle-plugin'
+rootProject.name = "triumph-gradle-plugin"
 
-include 'plugin'
-include 'plugin-test'
+["plugin", "annotations", "plugin-test"].each {
+    include "$it"
+    findProject(":$it")?.name = "triumph-gradle-$it"
+}

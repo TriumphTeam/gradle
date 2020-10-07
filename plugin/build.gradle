@@ -1,27 +1,44 @@
-import org.gradle.kotlin.dsl.support.KotlinCompilerKt
-
 plugins {
     id "java-gradle-plugin"
     id "maven-publish"
     id "org.jetbrains.kotlin.jvm" version "1.4.10"
+    id "com.gradle.plugin-publish" version "0.12.0"
 }
 
-group 'me.mattstudios'
-version '0.1.96-SNAPSHOT'
+group "me.mattstudios"
+version "0.1.144-SNAPSHOT"
 
 repositories {
     mavenCentral()
-    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    maven { url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
+    maven { url = "https://repo.mattstudios.me/artifactory/public" }
+}
+
+configurations {
+    unzip
+    shade
+    compileOnly {
+        extendsFrom unzip
+        extendsFrom shade
+    }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    implementation "org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10"
+    shade "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    compileOnly "org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10"
 
     testImplementation "io.kotlintest:kotlintest-runner-junit5:3.1.10"
-    //compileOnly fileTree(dir: "../test", includes: ["*.jar"])
-    implementation "org.spigotmc:spigot-api:1.16.2-R0.1-SNAPSHOT"
-    implementation "org.reflections:reflections:0.9.12"
+
+    shade "org.spigotmc:spigot-api:1.16.2-R0.1-SNAPSHOT"
+
+    shade "me.mattstudios:triumph-gradle-annotations:0.0.2"
+}
+
+jar {
+    from {
+        (configurations.shade + configurations.unzip)
+                .collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
 
 gradlePlugin {
@@ -34,7 +51,8 @@ gradlePlugin {
 }
 
 compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 compileTestKotlin {
