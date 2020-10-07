@@ -6,7 +6,7 @@ plugins {
 }
 
 group "me.mattstudios"
-version "0.1.144-SNAPSHOT"
+version "0.1.150-SNAPSHOT"
 
 repositories {
     mavenCentral()

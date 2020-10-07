@@ -3,7 +3,7 @@ buildscript {
         mavenLocal()
 
         dependencies {
-            classpath 'me.mattstudios.triumph:me.mattstudios.triumph.gradle.plugin:0.1.144-SNAPSHOT'
+            classpath 'me.mattstudios.triumph:me.mattstudios.triumph.gradle.plugin:0.1.150-SNAPSHOT'
         }
     }
 }
@@ -59,12 +59,10 @@ apply plugin: 'me.mattstudios.triumph'
 
 bukkit {
 
-    main = "me.mattstudios.plugin.MainClass"
     name = "TestPlugin"
-    version = project.version
     description = "A test plugin"
     load = "POSTWORLD"
-    author = ["md_5"]
+    author = "md_5"
     website = "spigotmc.org"
 
     commands {

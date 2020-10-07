@@ -15,7 +15,7 @@ open class BukkitExtension(project: Project) {
 
     var description: String? = null
     var apiVersion: String? = null
-    var load: Load? = null
+    var load: String? = null
     var author: String? = null
     var authors = mutableListOf<String>()
     var website: String? = null
