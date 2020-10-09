@@ -1,15 +1,14 @@
-package me.mattstudios.triumphplugin
+package me.mattstudios.triumphplugin.extensions
 
-import groovy.lang.Closure
-import org.gradle.api.NamedDomainObjectContainer
+import me.mattstudios.triumphplugin.exceptions.RequiredValueNotFoundException
+import org.bukkit.configuration.file.YamlConfiguration
 import org.gradle.api.Project
 
 /**
  * @author Matt
  */
-open class BukkitExtension(project: Project) {
+open class BukkitExtension(private val project: Project) {
 
-    var main: String? = null
     var name: String? = null
     var version: String? = null
 
@@ -27,64 +26,41 @@ open class BukkitExtension(project: Project) {
     var loadbefore = mutableListOf<String>()
 
     var commands: CommandsExtension = project.extensions.create("commands", CommandsExtension::class.java, project)
-    var permissions: PermissionExtension = project.extensions.create("permissions", PermissionExtension::class.java, project)
+    var permissions: PermissionsExtension =
+        project.extensions.create("permissions", PermissionsExtension::class.java, project)
 
-}
+    fun build(main: String): YamlConfiguration {
+        val configuration = YamlConfiguration()
 
-open class CommandsExtension(private val project: Project) {
+        configuration.apply {
+            set("main", main)
+            setRequired("name", this@BukkitExtension.name)
+            set("version", version ?: project.version)
+            set("description", description)
+            set("load", load)
+            set("author", author)
+            setList("authors", authors)
+            set("website", website)
+            set("prefix", prefix)
+            setList("depend", depend)
+            setList("softdepend", softdepend)
+            setList("loadbefore", loadbefore)
+            set("api-version", apiVersion)
+            set("commands", commands.build())
+            set("permissions", permissions.build())
+        }
 
-    private val commandContainer: NamedDomainObjectContainer<Command> = project.container(Command::class.java)
-
-    open fun command(name: String, closure: Closure<*>) {
-        project.configure(commandContainer.maybeCreate(name), closure)
+        return configuration
     }
 
-    fun test() {
-        println(commandContainer)
-        commandContainer.forEach { it.build() }
+    private fun YamlConfiguration.setRequired(key: String, value: String?) {
+        if (value == null) throw RequiredValueNotFoundException("Required value ($key) has not been defined!")
+        set(key, value)
     }
 
-}
-
-open class Command(private val name: String) {
-    var description: String? = null
-    var aliases = mutableListOf<String>()
-    var permission: String? = null
-    var permissionMessage: String? = null
-    var usage: String? = null
-
-    fun build() {
-        println(name)
-        println(description)
-        println(aliases)
-        println(permission)
-        println(permissionMessage)
-        println(usage)
-    }
-}
-
-open class PermissionExtension(private val project: Project) {
-
-    private val permissionContainer: NamedDomainObjectContainer<Permission> = project.container(Permission::class.java)
-
-    open fun permission(name: String, closure: Closure<*>) {
-        project.configure(permissionContainer.maybeCreate(name), closure)
+    private fun YamlConfiguration.setList(key: String, list: List<String>) {
+        if (list.isEmpty()) return
+        set(key, list)
     }
 
-    fun test() {
-        println(permissionContainer)
-        permissionContainer.forEach { it.build() }
-    }
-
-}
-
-open class Permission(private val name: String) {
-    var description: String? = null
-    var default: String? = null
-
-    fun build() {
-        println(name)
-        println(description)
-        println(default)
-    }
 }

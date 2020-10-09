@@ -8,6 +8,7 @@ class MainClass : JavaPlugin() {
 
     override fun onEnable() {
         println("fuck")
+
     }
 
 }

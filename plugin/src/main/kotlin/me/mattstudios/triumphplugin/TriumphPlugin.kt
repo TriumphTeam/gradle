@@ -4,12 +4,15 @@ import me.mattstudios.triumphplugin.constants.ANNOTATION_REPO
 import me.mattstudios.triumphplugin.constants.EXTENSION_NAME
 import me.mattstudios.triumphplugin.constants.PERSONAL_REPOSITORY
 import me.mattstudios.triumphplugin.exceptions.MainClassException
+import me.mattstudios.triumphplugin.exceptions.RequiredValueNotFoundException
 import me.mattstudios.triumphplugin.extensions.BukkitExtension
 import me.mattstudios.triumphplugin.func.findMainClass
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.logging.LogLevel
 import org.gradle.api.plugins.JavaPlugin
 import java.io.File
+
 
 class TriumphPlugin : Plugin<Project> {
 
@@ -42,7 +45,7 @@ class TriumphPlugin : Plugin<Project> {
             buildPlugin.doLast {
                 val main = buildDir.findMainClass() ?: throw MainClassException("Main class was not found!")
 
-                println("creating file")
+                logger.log(LogLevel.INFO, "Creating `plugin.yml` file!")
 
                 val folder = File("${buildDir}/resources/main/")
                 if (folder.exists().not()) folder.mkdirs()
@@ -57,7 +60,9 @@ class TriumphPlugin : Plugin<Project> {
             tasks.findByName("processResources")?.finalizedBy(buildPlugin)
 
             afterEvaluate {
-
+                val pluginName =
+                    extension.name ?: throw RequiredValueNotFoundException("Plugin name cannot be empty or null!")
+                if (pluginName.isEmpty()) throw RequiredValueNotFoundException("Plugin name cannot be empty or null!")
             }
         }
 

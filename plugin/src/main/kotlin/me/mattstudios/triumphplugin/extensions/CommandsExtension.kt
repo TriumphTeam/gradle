@@ -16,9 +16,12 @@ open class CommandsExtension(private val project: Project) {
         project.configure(commandContainer.maybeCreate(name), closure)
     }
 
-    fun test() {
-        println(commandContainer)
-        commandContainer.forEach { it.build() }
+    fun build(): MutableMap<String, Map<String, Any?>> {
+        val commands = mutableMapOf<String, Map<String, Any?>>()
+        commandContainer.forEach {
+            commands.putAll(it.build())
+        }
+        return commands
     }
 
 }

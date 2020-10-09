@@ -10,12 +10,15 @@ open class Command(private val name: String) {
     var permissionMessage: String? = null
     var usage: String? = null
 
-    fun build() {
-        println(name)
-        println(description)
-        println(aliases)
-        println(permission)
-        println(permissionMessage)
-        println(usage)
+    fun build(): Map<String, Map<String, Any?>> {
+        return mapOf(
+            name to mapOf(
+                "description" to description,
+                "aliases" to aliases,
+                "permission" to permission,
+                "permissionMessage" to permissionMessage,
+                "usage" to usage
+            )
+        )
     }
 }

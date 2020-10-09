@@ -3,7 +3,7 @@ buildscript {
         mavenLocal()
 
         dependencies {
-            classpath 'me.mattstudios.triumph:me.mattstudios.triumph.gradle.plugin:0.1.150-SNAPSHOT'
+            classpath 'me.mattstudios.triumph:me.mattstudios.triumph.gradle.plugin:0.0.3'
         }
     }
 }
@@ -64,6 +64,7 @@ bukkit {
     load = "POSTWORLD"
     author = "md_5"
     website = "spigotmc.org"
+    apiVersion = "1.13"
 
     commands {
 
@@ -79,9 +80,9 @@ bukkit {
 
     permissions {
 
-        permission("foo") {
+        permission("foo.bar") {
             description = "Foo command"
-            //default = ""
+            defaultValue = "Hello"
         }
 
     }

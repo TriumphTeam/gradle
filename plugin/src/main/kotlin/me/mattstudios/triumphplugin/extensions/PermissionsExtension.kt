@@ -16,9 +16,12 @@ open class PermissionsExtension(private val project: Project) {
         project.configure(permissionContainer.maybeCreate(name), closure)
     }
 
-    fun test() {
-        println(permissionContainer)
-        permissionContainer.forEach { it.build() }
+    fun build(): MutableMap<String, Map<String, Any?>> {
+        val permissions = mutableMapOf<String, Map<String, Any?>>()
+        permissionContainer.forEach {
+            permissions.putAll(it.build())
+        }
+        return permissions
     }
 
 }
