@@ -6,7 +6,7 @@ plugins {
 }
 
 group "me.mattstudios"
-version "0.0.3"
+version "0.1.0"
 
 repositories {
     mavenCentral()
@@ -44,11 +44,19 @@ jar {
 
 gradlePlugin {
     plugins {
-        simplePlugin {
+        triumph {
             id = "me.mattstudios.triumph"
+            displayName = "Triumph Gradle"
+            description = "Sets up PDM to automatically download any dependencies for Spigot plugins"
             implementationClass = "me.mattstudios.triumphplugin.TriumphPlugin"
         }
     }
+}
+
+pluginBundle {
+    website = "https://mf.mattstudios.me"
+    vcsUrl = "https://github.com/ipsk/triumph-gradle"
+    tags = ["spigot", "bukkit", "minecraft"]
 }
 
 compileKotlin {
