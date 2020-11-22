@@ -6,7 +6,7 @@ plugins {
 }
 
 group "me.mattstudios"
-version "0.1.0"
+version "0.1.5.19-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -47,7 +47,7 @@ gradlePlugin {
         triumph {
             id = "me.mattstudios.triumph"
             displayName = "Triumph Gradle"
-            description = "Sets up PDM to automatically download any dependencies for Spigot plugins"
+            description = "Plugin with utilities for the Triumph projects"
             implementationClass = "me.mattstudios.triumphplugin.TriumphPlugin"
         }
     }
@@ -55,7 +55,7 @@ gradlePlugin {
 
 pluginBundle {
     website = "https://mf.mattstudios.me"
-    vcsUrl = "https://github.com/ipsk/triumph-gradle"
+    vcsUrl = "https://github.com/TriumphDev/gradle"
     tags = ["spigot", "bukkit", "minecraft"]
 }
 

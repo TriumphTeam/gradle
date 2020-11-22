@@ -3,7 +3,7 @@ buildscript {
         mavenLocal()
 
         dependencies {
-            classpath 'me.mattstudios.triumph:me.mattstudios.triumph.gradle.plugin:0.0.3'
+            classpath 'me.mattstudios.triumph:me.mattstudios.triumph.gradle.plugin:0.1.5.19-SNAPSHOT'
         }
     }
 }
@@ -12,6 +12,8 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.4.0'
     id 'com.github.johnrengelman.shadow' version '6.0.0'
 }
+
+apply plugin: 'me.mattstudios.triumph'
 
 group 'org.example'
 version '1.0'
@@ -25,9 +27,13 @@ repositories {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+}
 
-    // Spigot
-    compileOnly "org.spigotmc:spigot-api:1.16.2-R0.1-SNAPSHOT"
+triumph {
+    spigot version: "1.16.4"
+    core version: "1.0.9", scope: "compileOnly"
+    msgs version: "2.0.2", type: "adventure"
+    cmds version: "1.4"
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -54,8 +60,6 @@ shadowJar {
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
-
-apply plugin: 'me.mattstudios.triumph'
 
 bukkit {
 

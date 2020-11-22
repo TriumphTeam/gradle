@@ -1,12 +1,12 @@
 package me.mattstudios.triumphplugin
 
-import me.mattstudios.triumphplugin.constants.ANNOTATION_REPO
-import me.mattstudios.triumphplugin.constants.EXTENSION_NAME
-import me.mattstudios.triumphplugin.constants.PERSONAL_REPOSITORY
+import me.mattstudios.triumphplugin.constants.ANNOTATION_DEPENDENCY
+import me.mattstudios.triumphplugin.constants.RESOURCES_TASK
 import me.mattstudios.triumphplugin.exceptions.MainClassException
 import me.mattstudios.triumphplugin.exceptions.RequiredValueNotFoundException
 import me.mattstudios.triumphplugin.extensions.BukkitExtension
-import me.mattstudios.triumphplugin.func.findMainClass
+import me.mattstudios.triumphplugin.extensions.TriumphExtension
+import me.mattstudios.triumphplugin.func.*
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.logging.LogLevel
@@ -22,27 +22,46 @@ class TriumphPlugin : Plugin<Project> {
             plugins.apply("java")
 
             // Creates the main extension
-            val extension = extensions.findByType(BukkitExtension::class.java) ?: extensions.create(
-                EXTENSION_NAME,
+            val bukkitExtension = extensions.findByType(BukkitExtension::class.java) ?: extensions.create(
+                "bukkit",
                 BukkitExtension::class.java,
-                project
+                this
+            )
+
+            // Creates the main extension
+            val triumphExtension = extensions.findByType(TriumphExtension::class.java) ?: extensions.create(
+                "triumph",
+                TriumphExtension::class.java
             )
 
             // Adds annotations to the project
             afterEvaluate {
-                repositories.maven {
-                    it.setUrl(PERSONAL_REPOSITORY)
+                repositories.addMain()
+
+                if (bukkitExtension.name != null) {
+                    dependencies.add(
+                        JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME,
+                        ANNOTATION_DEPENDENCY
+                    )
                 }
 
-                dependencies.add(
-                    JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME,
-                    ANNOTATION_REPO
-                )
+                with(triumphExtension) {
+                    addSpigot(spigotData)
+                    addPaper(paperData)
+                    addNms(nmsData)
+                    addCommands(cmdsData)
+                    addMessages(msgsData)
+                    addGui(guiData)
+                    addConfig(configData)
+                    addCore(coreData)
+                }
             }
 
             val buildPlugin = project.task("buildYamlPlugin")
 
             buildPlugin.doLast {
+                bukkitExtension.name ?: return@doLast
+
                 val main = buildDir.findMainClass() ?: throw MainClassException("Main class was not found!")
 
                 logger.log(LogLevel.INFO, "Creating `plugin.yml` file!")
@@ -52,18 +71,13 @@ class TriumphPlugin : Plugin<Project> {
                 val pluginFile = File(folder, "plugin.yml")
 
                 if (pluginFile.exists().not()) {
-                    val configuration = extension.build(main)
+                    val configuration = bukkitExtension.build(main)
                     configuration.save(pluginFile)
                 }
             }
 
-            tasks.findByName("processResources")?.finalizedBy(buildPlugin)
+            tasks.findByName(RESOURCES_TASK)?.finalizedBy(buildPlugin)
 
-            afterEvaluate {
-                val pluginName =
-                    extension.name ?: throw RequiredValueNotFoundException("Plugin name cannot be empty or null!")
-                if (pluginName.isEmpty()) throw RequiredValueNotFoundException("Plugin name cannot be empty or null!")
-            }
         }
 
     }
