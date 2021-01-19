@@ -1,11 +1,6 @@
 package me.mattstudios.triumphplugin.extensions
 
 import me.mattstudios.triumphplugin.exceptions.RequiredValueNotFoundException
-import org.bukkit.configuration.file.YamlConfiguration
-import org.gradle.api.DefaultTask
-import org.gradle.api.Project
-import org.gradle.api.Task
-import org.gradle.api.tasks.CacheableTask
 
 /**
  * @author Matt
@@ -13,13 +8,17 @@ import org.gradle.api.tasks.CacheableTask
 open class TriumphExtension {
 
     internal val spigotData = mutableMapOf<String, String>()
-    internal val paperData= mutableMapOf<String, String>()
-    internal val nmsData= mutableMapOf<String, String>()
-    internal val cmdsData= mutableMapOf<String, String>()
-    internal val msgsData= mutableMapOf<String, String>()
-    internal val guiData= mutableMapOf<String, String>()
-    internal val configData= mutableMapOf<String, String>()
-    internal val coreData= mutableMapOf<String, String>()
+    internal val paperData = mutableMapOf<String, String>()
+    internal val nmsData = mutableMapOf<String, String>()
+    internal val cmdsData = mutableMapOf<String, String>()
+    internal val msgsData = mutableMapOf<String, Any>()
+    internal val guiData = mutableMapOf<String, String>()
+    internal val configData = mutableMapOf<String, String>()
+    internal val coreData = mutableMapOf<String, String>()
+    internal val adventureData = mutableMapOf<String, String>()
+    internal val platformsData = mutableMapOf<String, Any>()
+    internal val cloudData = mutableMapOf<String, Any>()
+    internal val papiData = mutableMapOf<String, String>()
 
     fun spigot(spigotData: Map<String, String>): TriumphExtension {
         if (spigotData["version"] == null) {
@@ -77,7 +76,7 @@ open class TriumphExtension {
         return this
     }
 
-    fun msgs(msgsData: Map<String, String>): TriumphExtension {
+    fun msgs(msgsData: Map<String, Any>): TriumphExtension {
         if (msgsData["version"] == null) {
             throw RequiredValueNotFoundException("Dependency `msgs` doesn't have version")
         }
@@ -130,6 +129,62 @@ open class TriumphExtension {
 
     fun core(version: String): TriumphExtension {
         this.coreData["version"] = version
+        return this
+    }
+
+    fun adventure(adventureData: Map<String, String>): TriumphExtension {
+        if (adventureData["version"] == null) {
+            throw RequiredValueNotFoundException("Dependency `core` doesn't have version")
+        }
+
+        this.adventureData.putAll(adventureData)
+        return this
+    }
+
+    fun adventure(version: String): TriumphExtension {
+        this.adventureData["version"] = version
+        return this
+    }
+
+    fun platform(platformData: Map<String, Any>): TriumphExtension {
+        if (platformData["version"] == null) {
+            throw RequiredValueNotFoundException("Dependency `core` doesn't have version")
+        }
+
+        this.platformsData.putAll(platformData)
+        return this
+    }
+
+    fun platform(version: String): TriumphExtension {
+        this.platformsData["version"] = version
+        return this
+    }
+
+    fun cloud(cloudData: Map<String, Any>): TriumphExtension {
+        if (cloudData["version"] == null) {
+            throw RequiredValueNotFoundException("Dependency `core` doesn't have version")
+        }
+
+        this.cloudData.putAll(cloudData)
+        return this
+    }
+
+    fun cloud(version: String): TriumphExtension {
+        this.cloudData["version"] = version
+        return this
+    }
+
+    fun papi(papiData: Map<String, String>): TriumphExtension {
+        if (papiData["version"] == null) {
+            throw RequiredValueNotFoundException("Dependency `core` doesn't have version")
+        }
+
+        this.papiData.putAll(papiData)
+        return this
+    }
+
+    fun papi(version: String): TriumphExtension {
+        this.papiData["version"] = version
         return this
     }
 

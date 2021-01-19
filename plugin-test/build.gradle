@@ -3,37 +3,40 @@ buildscript {
         mavenLocal()
 
         dependencies {
-            classpath 'me.mattstudios.triumph:me.mattstudios.triumph.gradle.plugin:0.1.5.19-SNAPSHOT'
+            classpath "me.mattstudios.triumph:me.mattstudios.triumph.gradle.plugin:0.1.7.7-SNAPSHOT"
         }
     }
 }
 
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.4.0'
-    id 'com.github.johnrengelman.shadow' version '6.0.0'
+    id "org.jetbrains.kotlin.jvm" version "1.4.0"
+    id "com.github.johnrengelman.shadow" version "6.0.0"
 }
 
 apply plugin: 'me.mattstudios.triumph'
 
-group 'org.example'
-version '1.0'
+group "org.example"
+version "1.0"
 
 repositories {
     mavenCentral()
     mavenLocal()
-
-    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    //implementation "net.kyori:adventure-api:4.3.0"
+    implementation "net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT"
 }
 
 triumph {
     spigot version: "1.16.4"
     core version: "1.0.9", scope: "compileOnly"
-    msgs version: "2.0.2", type: "adventure"
+    msgs version: "2.2.2-SNAPSHOT", type: "adventure"
     cmds version: "1.4"
+    //adventure version: "4.3.0"
+    //platform version: "4.0.0-SNAPSHOT", type: "bukkit"
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -61,7 +64,7 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
-bukkit {
+/*bukkit {
 
     name = "TestPlugin"
     description = "A test plugin"
@@ -91,4 +94,4 @@ bukkit {
 
     }
 
-}
+}*/

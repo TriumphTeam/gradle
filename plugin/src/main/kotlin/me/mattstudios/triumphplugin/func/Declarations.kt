@@ -3,9 +3,60 @@ package me.mattstudios.triumphplugin.func
 import jdk.internal.org.objectweb.asm.ClassReader
 import jdk.internal.org.objectweb.asm.tree.ClassNode
 import me.mattstudios.triumphplugin.constants.BUKKIT_ANNOTATION
+import me.mattstudios.triumphplugin.constants.PERSONAL_REPOSITORY
 import me.mattstudios.triumphplugin.exceptions.MainClassException
+import org.gradle.api.artifacts.dsl.RepositoryHandler
+import org.gradle.api.plugins.JavaPlugin
 import java.io.File
 import java.io.FileNotFoundException
+
+private val scopes = mapOf(
+    "implementation" to JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME,
+    "compileonly" to JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME,
+    "api" to JavaPlugin.API_CONFIGURATION_NAME
+)
+
+fun RepositoryHandler.addMain() {
+    add(mavenCentral())
+    add(mavenLocal())
+    add(jcenter())
+}
+
+fun RepositoryHandler.addSonatype() {
+    add("https://oss.sonatype.org/content/repositories/snapshots/")
+}
+
+fun RepositoryHandler.addMatt() {
+    maven {
+        it.setUrl(PERSONAL_REPOSITORY)
+    }
+}
+
+fun RepositoryHandler.add(url: String) {
+    maven {
+        it.setUrl(url)
+    }
+}
+
+fun getScope(data: Map<String, Any>, default: String): String? {
+    if (data.isEmpty()) return null
+    val scopeData = data["scope"] ?: default
+    return if (scopeData !is String) scopes[default] else scopes[scopeData.toLowerCase()]
+}
+
+fun getTypes(data: Map<String, Any>, default: String): List<String> {
+    val typeData = data["type"]
+
+    val types = mutableListOf<String>()
+    when (typeData) {
+        is List<*> -> types.addAll(typeData.filterIsInstance<String>())
+        is String -> types.add(typeData)
+        else -> types.add(default)
+    }
+
+    return types
+}
+
 
 /**
  * Gets the main class fom the build directory

@@ -3,7 +3,6 @@ package me.mattstudios.triumphplugin
 import me.mattstudios.triumphplugin.constants.ANNOTATION_DEPENDENCY
 import me.mattstudios.triumphplugin.constants.RESOURCES_TASK
 import me.mattstudios.triumphplugin.exceptions.MainClassException
-import me.mattstudios.triumphplugin.exceptions.RequiredValueNotFoundException
 import me.mattstudios.triumphplugin.extensions.BukkitExtension
 import me.mattstudios.triumphplugin.extensions.TriumphExtension
 import me.mattstudios.triumphplugin.func.*
@@ -39,6 +38,7 @@ class TriumphPlugin : Plugin<Project> {
                 repositories.addMain()
 
                 if (bukkitExtension.name != null) {
+                    repositories.addMatt()
                     dependencies.add(
                         JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME,
                         ANNOTATION_DEPENDENCY
@@ -46,14 +46,25 @@ class TriumphPlugin : Plugin<Project> {
                 }
 
                 with(triumphExtension) {
+                    // Bukkit
                     addSpigot(spigotData)
                     addPaper(paperData)
                     addNms(nmsData)
+
+                    // Triumph
                     addCommands(cmdsData)
                     addMessages(msgsData)
                     addGui(guiData)
                     addConfig(configData)
                     addCore(coreData)
+
+                    // Kyori
+                    addPlatform(platformsData)
+                    addAdventure(adventureData)
+
+                    // Other
+                    addCloud(cloudData)
+                    addPapi(paperData)
                 }
             }
 
