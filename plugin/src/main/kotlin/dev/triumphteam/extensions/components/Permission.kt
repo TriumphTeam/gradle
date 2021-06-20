@@ -1,4 +1,4 @@
-package me.mattstudios.triumphplugin.extensions.components
+package dev.triumphteam.extensions.components
 
 /**
  * @author Matt

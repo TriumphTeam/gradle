@@ -1,7 +1,7 @@
-package me.mattstudios.triumphplugin.extensions
+package dev.triumphteam.extensions
 
 import groovy.lang.Closure
-import me.mattstudios.triumphplugin.extensions.components.Permission
+import dev.triumphteam.extensions.components.Permission
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
 

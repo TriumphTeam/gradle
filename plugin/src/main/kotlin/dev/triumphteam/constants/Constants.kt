@@ -1,4 +1,4 @@
-package me.mattstudios.triumphplugin.constants
+package dev.triumphteam.constants
 
 const val RESOURCES_TASK = "processResources"
 

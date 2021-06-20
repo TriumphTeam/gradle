@@ -1,6 +1,6 @@
-package me.mattstudios.triumphplugin.extensions
+package dev.triumphteam.extensions
 
-import me.mattstudios.triumphplugin.exceptions.RequiredValueNotFoundException
+import dev.triumphteam.exceptions.RequiredValueNotFoundException
 
 /**
  * @author Matt

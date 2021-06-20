@@ -1,4 +1,4 @@
-package me.mattstudios.triumphplugin.exceptions
+package dev.triumphteam.exceptions
 
 /**
  * @author Matt

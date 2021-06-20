@@ -1,4 +1,4 @@
-package me.mattstudios.triumphplugin.func
+package dev.triumphteam.func
 
 import org.gradle.api.Project
 

@@ -1,12 +1,12 @@
-package me.mattstudios.triumphplugin.func
+package dev.triumphteam.func
 
-import jdk.internal.org.objectweb.asm.ClassReader
-import jdk.internal.org.objectweb.asm.tree.ClassNode
-import me.mattstudios.triumphplugin.constants.BUKKIT_ANNOTATION
-import me.mattstudios.triumphplugin.constants.PERSONAL_REPOSITORY
-import me.mattstudios.triumphplugin.exceptions.MainClassException
+import dev.triumphteam.constants.BUKKIT_ANNOTATION
+import dev.triumphteam.constants.PERSONAL_REPOSITORY
+import dev.triumphteam.exceptions.MainClassException
 import org.gradle.api.artifacts.dsl.RepositoryHandler
 import org.gradle.api.plugins.JavaPlugin
+import org.objectweb.asm.ClassReader
+import org.objectweb.asm.tree.ClassNode
 import java.io.File
 import java.io.FileNotFoundException
 
