@@ -5,6 +5,8 @@
 
 build/
 
+plugin-test/
+
 *.iml
 
 gradle.properties
