@@ -1,6 +1,5 @@
-package me.mattstudios.triumphplugin
+package dev.triumphteam
 
-import com.google.gson.GsonBuilder
 import dev.triumphteam.constants.ANNOTATION_DEPENDENCY
 import dev.triumphteam.constants.RESOURCES_TASK
 import dev.triumphteam.exceptions.MainClassException
@@ -20,14 +19,16 @@ import dev.triumphteam.func.addPaper
 import dev.triumphteam.func.addPapi
 import dev.triumphteam.func.addPlatform
 import dev.triumphteam.func.addSpigot
+import dev.triumphteam.func.createFileIfNotExists
 import dev.triumphteam.func.findMainClass
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
-import org.gradle.api.artifacts.repositories.MavenArtifactRepository
 import org.gradle.api.logging.LogLevel
 import org.gradle.api.plugins.JavaPlugin
-import java.io.File
+import org.yaml.snakeyaml.DumperOptions
+import org.yaml.snakeyaml.Yaml
+import java.nio.file.Paths
 
 
 class TriumphPlugin : Plugin<Project> {
@@ -55,7 +56,7 @@ class TriumphPlugin : Plugin<Project> {
             afterEvaluate {
                 repositories.addMain()
 
-                if (bukkitExtension.name != null) {
+                if (bukkitExtension.used) {
                     repositories.addMatt()
                     dependencies.add(
                         JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME,
@@ -90,50 +91,26 @@ class TriumphPlugin : Plugin<Project> {
             val buildPlugin = project.task("buildYamlPlugin")
 
             buildPlugin.doLast {
-                bukkitExtension.name ?: return@doLast
-
-                //val config = project.configurations.getByName("runtimeClassPath") ?: return@doLast
-                val dependencies = assConfig.incoming.resolutionResult.allDependencies
-                    .map { it.requested }
-                    .toSet()
-                    .map {
-                        val (groupId, artifactId, version) = it.displayName.split(":")
-                        Dependency("todo", groupId, artifactId, version)
-                    }.toSet()
-
-                val relocations = setOf(
-                    Relocation("test.package.from", "test.package.to"),
-                    Relocation("test.package.from2", "test.package.to2"),
-                    Relocation("test.package.from3", "test.package.to3"),
-                )
-                println(
-                    GsonBuilder().setPrettyPrinting().create()
-                        .toJson(DependencyData(dependencies, relocations))
-                )
-                println("  ---  ")
-                println(
-                    GsonBuilder().setPrettyPrinting().create()
-                        .toJson(
-                            repositories.filterIsInstance<MavenArtifactRepository>()
-                                .map { it.url.toString() }
-                                .filter { !it.startsWith("file") }
-                                .toSet()
-                        )
-                )
+                if (!bukkitExtension.used) return@doLast
 
                 val main = buildDir.findMainClass() ?: throw MainClassException("Main class was not found!")
 
                 logger.log(LogLevel.INFO, "Creating `plugin.yml` file!")
 
-                val folder = File("${buildDir}/resources/main/")
-                if (folder.exists().not()) folder.mkdirs()
-                val pluginFile = File(folder, "plugin.yml")
+                val pluginPath = Paths.get(buildDir.path, "resources", "main", "plugin.yml")
+                pluginPath.createFileIfNotExists()
 
-                if (pluginFile.exists().not()) {
-                    val configuration = bukkitExtension.build(main)
-                    configuration.save(pluginFile)
+                val dumpOptions = DumperOptions().apply {
+                    defaultFlowStyle = DumperOptions.FlowStyle.BLOCK
+                    isPrettyFlow = true
+                    isAllowUnicode = true
                 }
+
+                val yaml = Yaml(dumpOptions)
+                yaml.dump(bukkitExtension.build(main), pluginPath.toFile().writer())
+
             }
+
 
             tasks.findByName(RESOURCES_TASK)?.finalizedBy(buildPlugin)
 

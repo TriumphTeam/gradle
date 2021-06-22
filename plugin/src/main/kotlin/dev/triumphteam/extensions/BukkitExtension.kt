@@ -1,7 +1,5 @@
 package dev.triumphteam.extensions
 
-import dev.triumphteam.exceptions.RequiredValueNotFoundException
-import org.bukkit.configuration.file.YamlConfiguration
 import org.gradle.api.Project
 
 /**
@@ -29,7 +27,7 @@ open class BukkitExtension(private val project: Project) {
     var permissions: PermissionsExtension =
         project.extensions.create("permissions", PermissionsExtension::class.java, project)
 
-    fun build(main: String): YamlConfiguration {
+    /*fun build(main: String): YamlConfiguration {
         val configuration = YamlConfiguration()
 
         configuration.apply {
@@ -62,5 +60,5 @@ open class BukkitExtension(private val project: Project) {
         if (list.isEmpty()) return
         set(key, list)
     }
-
+*/
 }

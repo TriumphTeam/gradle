@@ -1,5 +1,6 @@
 package me.mattstudios.triumphplugin
 
+import dev.triumphteam.TriumphPlugin
 import io.kotlintest.shouldNotBe
 import io.kotlintest.specs.WordSpec
 import org.gradle.testfixtures.ProjectBuilder

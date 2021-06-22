@@ -10,6 +10,8 @@ import org.objectweb.asm.tree.ClassNode
 import java.io.File
 import java.io.FileNotFoundException
 
+private val DIRECTORY_REGEX = "\\\\(kotlin|java)\\\\main\\\\".toRegex()
+
 private val scopes = mapOf(
     "implementation" to JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME,
     "compileonly" to JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME,
@@ -57,6 +59,12 @@ fun getTypes(data: Map<String, Any>, default: String): List<String> {
     return types
 }
 
+/**
+ * Extension function to remove a string from a string.
+ */
+fun String.remove(string: String): String {
+    return replace(string, "")
+}
 
 /**
  * Gets the main class fom the build directory
@@ -81,6 +89,8 @@ fun File.findMainClass(): String? {
 
         // Loops throw all the files in the folder, I love Kotlin
         for (file in folderMain.walkBottomUp().filter { it.extension == "class" }) {
+            // TODO test this
+            if (main != null) throw MainClassException("Multiple main classes were detected!")
 
             // ASM ClassReader and Node to check for the annotation
             val classReader = ClassReader(file.readBytes())
@@ -89,19 +99,18 @@ fun File.findMainClass(): String? {
             classReader.accept(classNode, ClassReader.EXPAND_FRAMES)
 
             // Gets the path to the class (package and class name)
-            val classPath = file.path.removeSuffix(".class")
-                .split("\\\\(kotlin|java)\\\\main\\\\".toRegex())
-                .last().replace("\\", ".")
+            val classPath = file.path
+                .remove(folderMain.path)
+                .removePrefix(File.separator)
+                .replace(File.separator, ".")
+                .removeSuffix(".class")
 
             // Checks for the main annotation
-            if (classNode.visibleAnnotations.map { it.desc }.find { BUKKIT_ANNOTATION in it } == null) {
+            if (classNode.invisibleAnnotations?.map { it.desc }?.find { BUKKIT_ANNOTATION in it } == null) {
                 continue
             }
 
-            if (main != null) throw MainClassException("Multiple main classes were detected!")
-
             main = classPath
-
         }
     }
 

@@ -1,6 +1,6 @@
 rootProject.name = "triumph-gradle-plugin"
 
-["plugin", "annotations", "plugin-test"].each {
-    include "$it"
+listOf("plugin", "annotations", "plugin-test").forEach {
+    include(it)
     findProject(":$it")?.name = "triumph-gradle-$it"
 }
