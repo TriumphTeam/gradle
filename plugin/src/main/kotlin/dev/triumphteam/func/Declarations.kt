@@ -11,6 +11,8 @@ import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
 
+private val OLD_PAPER_VERSIONS = (8..16)
+
 internal fun Logger.info(block: () -> String) {
     info(block())
 }
@@ -88,4 +90,11 @@ internal fun Path.createFileIfNotExists() {
     } catch (e: IOException) {
         throw Exception("Failed to create file '$this'", e)
     }
+}
+
+internal fun String.isOld(): Boolean {
+    OLD_PAPER_VERSIONS.forEach {
+        if (startsWith("1.$it")) return true
+    }
+    return false
 }

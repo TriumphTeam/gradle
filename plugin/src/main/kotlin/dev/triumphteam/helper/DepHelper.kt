@@ -1,15 +1,27 @@
 package dev.triumphteam.helper
 
+import dev.triumphteam.constants.GROUP
+import dev.triumphteam.constants.OLD_GROUP
+import dev.triumphteam.func.isOld
 import org.gradle.api.artifacts.dsl.DependencyHandler
+import org.gradle.api.plugins.JavaPlugin
 
-private const val OLD_GROUP = "me.mattstudios"
-private const val GROUP = "dev.triumphteam"
-private val OLD_PAPER_VERSIONS = (8..16)
+fun DependencyHandler.compileOnly(vararg dependencies: String) {
+    dependencies.forEach { add(JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME, it) }
+}
+
+fun DependencyHandler.implementation(vararg dependencies: String) {
+    dependencies.forEach { add(JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME, it) }
+}
+
+fun DependencyHandler.paper(version: MinecraftVersion) = paper(version.version)
 
 fun DependencyHandler.paper(version: String): String {
     if (version.isOld()) return "com.destroystokyo.paper:paper-api:$version-R0.1-SNAPSHOT"
     return "io.papermc.paper:paper-api:$version-R0.1-SNAPSHOT"
 }
+
+fun DependencyHandler.spigot(version: MinecraftVersion) = spigot(version.version)
 
 fun DependencyHandler.spigot(version: String): String {
     return "org.spigotmc:spigot-api:$version-R0.1-SNAPSHOT"
@@ -40,11 +52,4 @@ fun DependencyHandler.adventure(platform: String, version: String): String {
 
 fun DependencyHandler.papi(version: String): String {
     return "me.clip:placeholderapi:$version"
-}
-
-private fun String.isOld(): Boolean {
-    OLD_PAPER_VERSIONS.forEach {
-        if (startsWith("1.$it")) return true
-    }
-    return false
 }

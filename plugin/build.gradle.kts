@@ -1,5 +1,5 @@
-
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.5.10"
@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "me.mattstudios"
-version = "0.2.0.1"
+version = "0.2.0"
 
 repositories {
     mavenCentral()
@@ -91,7 +91,7 @@ tasks.named("check") {
 }
 
 tasks {
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    withType<KotlinCompile> {
         kotlinOptions {
             jvmTarget = "1.8"
             freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
@@ -102,8 +102,8 @@ tasks {
         mapOf(
             "me.mattstudios" to "matt",
             "com.google" to "google",
-            "net.md_5" to "what",
-            "org.bukkit" to "org"
+            "org.yaml" to "yaml",
+            "org.objectweb.asm" to "asm"
         ).forEach { relocate(it.key, "dev.triumphteam.lib.${it.value}") }
     }
 
@@ -124,7 +124,6 @@ afterEvaluate {
         }
     }
 }
-
 
 gradlePlugin {
     plugins {

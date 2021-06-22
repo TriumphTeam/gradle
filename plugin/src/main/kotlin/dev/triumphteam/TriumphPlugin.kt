@@ -21,7 +21,7 @@ import java.nio.file.Paths
 class TriumphPlugin : Plugin<Project> {
 
     override fun apply(project: Project): Unit = with(project) {
-        println(BukkitMain::class.java.name)
+        println(BukkitMain::class.java.simpleName)
         plugins.apply("java")
 
         // Creates the main extension
