@@ -1,31 +1,18 @@
 package dev.triumphteam
 
+import dev.triumphteam.annotations.BukkitMain
 import dev.triumphteam.constants.ANNOTATION_DEPENDENCY
+import dev.triumphteam.constants.PERSONAL_REPOSITORY
 import dev.triumphteam.constants.RESOURCES_TASK
 import dev.triumphteam.exceptions.MainClassException
 import dev.triumphteam.extensions.BukkitExtension
-import dev.triumphteam.extensions.TriumphExtension
-import dev.triumphteam.func.addAdventure
-import dev.triumphteam.func.addCloud
-import dev.triumphteam.func.addCommands
-import dev.triumphteam.func.addConfig
-import dev.triumphteam.func.addCore
-import dev.triumphteam.func.addGui
-import dev.triumphteam.func.addMain
-import dev.triumphteam.func.addMatt
-import dev.triumphteam.func.addMessages
-import dev.triumphteam.func.addNms
-import dev.triumphteam.func.addPaper
-import dev.triumphteam.func.addPapi
-import dev.triumphteam.func.addPlatform
-import dev.triumphteam.func.addSpigot
 import dev.triumphteam.func.createFileIfNotExists
 import dev.triumphteam.func.findMainClass
+import dev.triumphteam.func.info
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.artifacts.Configuration
-import org.gradle.api.logging.LogLevel
 import org.gradle.api.plugins.JavaPlugin
+import org.gradle.kotlin.dsl.maven
 import org.yaml.snakeyaml.DumperOptions
 import org.yaml.snakeyaml.Yaml
 import java.nio.file.Paths
@@ -33,117 +20,53 @@ import java.nio.file.Paths
 
 class TriumphPlugin : Plugin<Project> {
 
-    override fun apply(project: Project) {
+    override fun apply(project: Project): Unit = with(project) {
+        println(BukkitMain::class.java.name)
+        plugins.apply("java")
 
-        with(project) {
-            plugins.apply("java")
-            val assConfig = createConfig("ass", JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME)
+        // Creates the main extension
+        val bukkitExtension = extensions.findByType(BukkitExtension::class.java) ?: extensions.create(
+            "bukkit",
+            BukkitExtension::class.java,
+            this
+        )
 
-            // Creates the main extension
-            val bukkitExtension = extensions.findByType(BukkitExtension::class.java) ?: extensions.create(
-                "bukkit",
-                BukkitExtension::class.java,
-                this
-            )
+        // Adds annotations to the project
+        afterEvaluate {
+            if (bukkitExtension.used) {
+                repositories.maven(PERSONAL_REPOSITORY)
 
-            // Creates the main extension
-            val triumphExtension = extensions.findByType(TriumphExtension::class.java) ?: extensions.create(
-                "triumph",
-                TriumphExtension::class.java
-            )
+                dependencies.add(
+                    JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME,
+                    ANNOTATION_DEPENDENCY
+                )
+            }
+        }
 
-            // Adds annotations to the project
-            afterEvaluate {
-                repositories.addMain()
+        // TODO move this to another class maybe
+        if (!bukkitExtension.used) return
 
-                if (bukkitExtension.used) {
-                    repositories.addMatt()
-                    dependencies.add(
-                        JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME,
-                        ANNOTATION_DEPENDENCY
-                    )
-                }
+        val buildPlugin = project.task("buildYamlPlugin")
 
-                with(triumphExtension) {
-                    // Bukkit
-                    addSpigot(spigotData)
-                    addPaper(paperData)
-                    addNms(nmsData)
+        buildPlugin.doLast {
+            val main = buildDir.findMainClass() ?: throw MainClassException("Main class was not found!")
 
-                    // Triumph
-                    addCommands(cmdsData)
-                    addMessages(msgsData)
-                    addGui(guiData)
-                    addConfig(configData)
-                    addCore(coreData)
+            logger.info { "Creating `plugin.yml` file!" }
 
-                    // Kyori
-                    addPlatform(platformsData)
-                    addAdventure(adventureData)
+            val pluginPath = Paths.get(buildDir.path, "resources", "main", "plugin.yml")
+            pluginPath.createFileIfNotExists()
 
-                    // Other
-                    addPapi(papiData)
-                    addCloud(cloudData)
-
-                }
+            val dumpOptions = DumperOptions().apply {
+                defaultFlowStyle = DumperOptions.FlowStyle.BLOCK
+                isPrettyFlow = true
+                isAllowUnicode = true
             }
 
-            val buildPlugin = project.task("buildYamlPlugin")
-
-            buildPlugin.doLast {
-                if (!bukkitExtension.used) return@doLast
-
-                val main = buildDir.findMainClass() ?: throw MainClassException("Main class was not found!")
-
-                logger.log(LogLevel.INFO, "Creating `plugin.yml` file!")
-
-                val pluginPath = Paths.get(buildDir.path, "resources", "main", "plugin.yml")
-                pluginPath.createFileIfNotExists()
-
-                val dumpOptions = DumperOptions().apply {
-                    defaultFlowStyle = DumperOptions.FlowStyle.BLOCK
-                    isPrettyFlow = true
-                    isAllowUnicode = true
-                }
-
-                val yaml = Yaml(dumpOptions)
-                yaml.dump(bukkitExtension.build(main), pluginPath.toFile().writer())
-
-            }
-
-
-            tasks.findByName(RESOURCES_TASK)?.finalizedBy(buildPlugin)
+            val yaml = Yaml(dumpOptions)
+            yaml.dump(bukkitExtension.build(main), pluginPath.toFile().writer())
 
         }
 
+        tasks.findByName(RESOURCES_TASK)?.finalizedBy(buildPlugin)
     }
-
 }
-
-internal fun Project.createConfig(configName: String, extends: String): Configuration {
-    val compileOnlyConfig = configurations.findByName(extends) ?: throw RuntimeException("ass")
-
-    val slimConfig = configurations.create(configName)
-    compileOnlyConfig.extendsFrom(slimConfig)
-    // TODO need to test this one, probably doesn't do what I think it does
-    slimConfig.isTransitive = true
-
-    return slimConfig
-}
-
-data class DependencyData(
-    val dependencies: Set<Dependency>,
-    val relocations: Set<Relocation>,
-)
-
-data class Dependency(
-    val url: String,
-    val groupId: String,
-    val artifactId: String,
-    val version: String,
-)
-
-data class Relocation(
-    val original: String,
-    val relocated: String,
-)

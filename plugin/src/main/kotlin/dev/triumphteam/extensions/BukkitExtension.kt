@@ -1,64 +1,136 @@
+@file:OptIn(ExperimentalStdlibApi::class)
+
 package dev.triumphteam.extensions
 
+import dev.triumphteam.extensions.components.CommandsBuilder
+import dev.triumphteam.extensions.components.PermissionsBuilder
 import org.gradle.api.Project
 
 /**
- * @author Matt
+ * All the setter override is to create a simple check if the extension is being used or not, since that's not provided by gradle.
  */
+@Suppress("MemberVisibilityCanBePrivate")
 open class BukkitExtension(private val project: Project) {
 
+    internal var used = false
+        private set
+
     var name: String? = null
-    var version: String? = null
-
-    var description: String? = null
-    var apiVersion: String? = null
-    var load: String? = null
-    var author: String? = null
-    var authors = mutableListOf<String>()
-    var website: String? = null
-    var prefix: String? = null
-
-    var depend = mutableListOf<String>()
-    var softdepend = mutableListOf<String>()
-
-    var loadbefore = mutableListOf<String>()
-
-    var commands: CommandsExtension = project.extensions.create("commands", CommandsExtension::class.java, project)
-    var permissions: PermissionsExtension =
-        project.extensions.create("permissions", PermissionsExtension::class.java, project)
-
-    /*fun build(main: String): YamlConfiguration {
-        val configuration = YamlConfiguration()
-
-        configuration.apply {
-            set("main", main)
-            setRequired("name", this@BukkitExtension.name)
-            set("version", version ?: project.version)
-            set("description", description)
-            set("load", load)
-            set("author", author)
-            setList("authors", authors)
-            set("website", website)
-            set("prefix", prefix)
-            setList("depend", depend)
-            setList("softdepend", softdepend)
-            setList("loadbefore", loadbefore)
-            set("api-version", apiVersion)
-            set("commands", commands.build())
-            set("permissions", permissions.build())
+        set(value) {
+            used = true
+            field = value
         }
 
-        return configuration
+    var version: String? = null
+        set(value) {
+            used = true
+            field = value
+        }
+
+    var description: String? = null
+        set(value) {
+            used = true
+            field = value
+        }
+
+    var apiVersion: String? = null
+        set(value) {
+            used = true
+            field = value
+        }
+
+    var load: String? = null
+        set(value) {
+            used = true
+            field = value
+        }
+
+    var author: String? = null
+        set(value) {
+            used = true
+            field = value
+        }
+
+    var authors: List<String>? = null
+        set(value) {
+            used = true
+            field = value
+        }
+
+    var website: String? = null
+        set(value) {
+            used = true
+            field = value
+        }
+
+    var prefix: String? = null
+        set(value) {
+            used = true
+            field = value
+        }
+
+    var depend: List<String>? = null
+        set(value) {
+            used = true
+            field = value
+        }
+
+    var softdepend: List<String>? = null
+        set(value) {
+            used = true
+            field = value
+        }
+
+    var loadbefore: List<String>? = null
+        set(value) {
+            used = true
+            field = value
+        }
+
+    private var commands: CommandsBuilder? = null
+        set(value) {
+            used = true
+            field = value
+        }
+
+    private var permissions: PermissionsBuilder? = null
+        set(value) {
+            used = true
+            field = value
+        }
+
+    fun commands(commands: CommandsBuilder.() -> Unit) {
+        this.commands = CommandsBuilder().apply(commands)
     }
 
-    private fun YamlConfiguration.setRequired(key: String, value: String?) {
-        if (value == null) throw RequiredValueNotFoundException("Required value ($key) has not been defined!")
-        set(key, value)
+    fun permissions(commands: PermissionsBuilder.() -> Unit) {
+        this.permissions = PermissionsBuilder().apply(commands)
     }
 
-    private fun YamlConfiguration.setList(key: String, list: List<String>) {
-        if (list.isEmpty()) return
-        set(key, list)
+    internal fun build(main: String): Map<String, Any> {
+        return buildMap {
+            add("main", main)
+            add("name", name ?: project.name)
+            add("version", version ?: project.version.toString())
+            add("api-version", apiVersion)
+            add("description", description)
+            add("load", load)
+            add("author", author)
+            add("authors", authors)
+            add("website", website)
+            add("depend", depend)
+            add("prefix", prefix)
+            add("softdepend", softdepend)
+            add("loadbefore", loadbefore)
+            add("commands", commands?.build())
+            add("permissions", permissions?.build())
+        }
     }
-*/
+
+    private fun MutableMap<String, Any>.add(key: String, value: Any?) {
+        value?.let {
+            this[key] = it
+        }
+    }
+
 }

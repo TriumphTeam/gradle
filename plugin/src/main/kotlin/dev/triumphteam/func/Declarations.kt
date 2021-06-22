@@ -1,75 +1,31 @@
 package dev.triumphteam.func
 
 import dev.triumphteam.constants.BUKKIT_ANNOTATION
-import dev.triumphteam.constants.PERSONAL_REPOSITORY
 import dev.triumphteam.exceptions.MainClassException
-import org.gradle.api.artifacts.dsl.RepositoryHandler
-import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.logging.Logger
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.tree.ClassNode
 import java.io.File
 import java.io.FileNotFoundException
+import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.Path
 
-private val DIRECTORY_REGEX = "\\\\(kotlin|java)\\\\main\\\\".toRegex()
-
-private val scopes = mapOf(
-    "implementation" to JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME,
-    "compileonly" to JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME,
-    "api" to JavaPlugin.API_CONFIGURATION_NAME
-)
-
-fun RepositoryHandler.addMain() {
-    add(mavenCentral())
-    add(mavenLocal())
-    add(jcenter())
-}
-
-fun RepositoryHandler.addSonatype() {
-    add("https://oss.sonatype.org/content/repositories/snapshots/")
-}
-
-fun RepositoryHandler.addMatt() {
-    maven {
-        it.setUrl(PERSONAL_REPOSITORY)
-    }
-}
-
-fun RepositoryHandler.add(url: String) {
-    maven {
-        it.setUrl(url)
-    }
-}
-
-fun getScope(data: Map<String, Any>, default: String): String? {
-    if (data.isEmpty()) return null
-    val scopeData = data["scope"] ?: default
-    return if (scopeData !is String) scopes[default] else scopes[scopeData.toLowerCase()]
-}
-
-fun getTypes(data: Map<String, Any>, default: String): List<String> {
-    val typeData = data["type"]
-
-    val types = mutableListOf<String>()
-    when (typeData) {
-        is List<*> -> types.addAll(typeData.filterIsInstance<String>())
-        is String -> types.add(typeData)
-        else -> types.add(default)
-    }
-
-    return types
+internal fun Logger.info(block: () -> String) {
+    info(block())
 }
 
 /**
  * Extension function to remove a string from a string.
  */
-fun String.remove(string: String): String {
+internal fun String.remove(string: String): String {
     return replace(string, "")
 }
 
 /**
  * Gets the main class fom the build directory
  */
-fun File.findMainClass(): String? {
+internal fun File.findMainClass(): String? {
     var main: String? = null
 
     // Gets the classes folder
@@ -115,4 +71,21 @@ fun File.findMainClass(): String? {
     }
 
     return main
+}
+
+internal fun Path.createFileIfNotExists() {
+    if (Files.exists(this)) return
+
+    if (!Files.exists(parent) || !Files.isDirectory(parent)) {
+        try {
+            Files.createDirectories(parent)
+        } catch (e: IOException) {
+            throw Exception("Failed to create parent folders for '$this'", e)
+        }
+    }
+    try {
+        Files.createFile(this)
+    } catch (e: IOException) {
+        throw Exception("Failed to create file '$this'", e)
+    }
 }
