@@ -1,3 +1,4 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -40,8 +41,12 @@ dependencies {
 }
 
 val shadowJarTask = tasks.named("shadowJar", ShadowJar::class.java)
+val relocateShadowJar = tasks.register("relocateShadowJar", ConfigureShadowRelocation::class.java) {
+    target = shadowJarTask.get()
+}
 
 shadowJarTask.configure {
+    dependsOn(relocateShadowJar)
     archiveClassifier.set("")
     configurations = listOf(shadowImplementation)
 }
@@ -74,7 +79,10 @@ val ensureDependenciesAreInlined by tasks.registering {
                 val path = relativePath
                 if (
                     !path.startsWith("META-INF") &&
-                    path.lastName.endsWith(".class")
+                    path.lastName.endsWith(".class") &&
+                    !path.pathString.startsWith(
+                        "me.mattstudios.triumph".replace(".", "/")
+                    )
                 ) {
                     nonInlinedDependencies.add(path.pathString)
                 }
@@ -98,6 +106,10 @@ tasks {
         }
     }
 
+    withType<GenerateModuleMetadata> {
+        enabled = false
+    }
+
     withType<ShadowJar> {
         mapOf(
             "me.mattstudios" to "matt",
@@ -105,6 +117,9 @@ tasks {
             "org.yaml" to "yaml",
             "org.objectweb.asm" to "asm"
         ).forEach { relocate(it.key, "dev.triumphteam.lib.${it.value}") }
+
+        // Hacky trick to prevent kotlin from being relocated to `shadow.kotlin`
+        relocate("kotlin", "kotlin")
     }
 
     test {

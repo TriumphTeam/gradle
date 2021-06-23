@@ -1,6 +1,5 @@
 package dev.triumphteam
 
-import dev.triumphteam.annotations.BukkitMain
 import dev.triumphteam.constants.ANNOTATION_DEPENDENCY
 import dev.triumphteam.constants.PERSONAL_REPOSITORY
 import dev.triumphteam.constants.RESOURCES_TASK
@@ -17,11 +16,9 @@ import org.yaml.snakeyaml.DumperOptions
 import org.yaml.snakeyaml.Yaml
 import java.nio.file.Paths
 
-
 class TriumphPlugin : Plugin<Project> {
 
     override fun apply(project: Project): Unit = with(project) {
-        println(BukkitMain::class.java.simpleName)
         plugins.apply("java")
 
         // Creates the main extension
@@ -43,12 +40,11 @@ class TriumphPlugin : Plugin<Project> {
             }
         }
 
-        // TODO move this to another class maybe
-        if (!bukkitExtension.used) return
-
         val buildPlugin = project.task("buildYamlPlugin")
 
         buildPlugin.doLast {
+            if (!bukkitExtension.used) return@doLast
+
             val main = buildDir.findMainClass() ?: throw MainClassException("Main class was not found!")
 
             logger.info { "Creating `plugin.yml` file!" }
