@@ -12,3 +12,5 @@ internal val BUKKIT_ANNOTATION = BukkitMain::class.java.simpleName
 
 internal const val OLD_GROUP = "me.mattstudios"
 internal const val GROUP = "dev.triumphteam"
+
+internal const val LATEST_VERSION_DEFAULT = "+"

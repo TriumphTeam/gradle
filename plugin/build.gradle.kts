@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "me.mattstudios"
-version = "0.2.0"
+version = "0.2.1"
 
 repositories {
     mavenCentral()
@@ -112,7 +112,6 @@ tasks {
 
     withType<ShadowJar> {
         mapOf(
-            "me.mattstudios" to "matt",
             "com.google" to "google",
             "org.yaml" to "yaml",
             "org.objectweb.asm" to "asm"
