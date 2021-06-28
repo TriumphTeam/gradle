@@ -30,9 +30,8 @@ class TriumphPlugin : Plugin<Project> {
 
         // Adds annotations to the project
         afterEvaluate {
-            if (bukkitExtension.used) {
+            allprojects {
                 repositories.maven(PERSONAL_REPOSITORY)
-
                 dependencies.add(
                     JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME,
                     ANNOTATION_DEPENDENCY
