@@ -47,8 +47,6 @@ internal fun File.findMainClass(): String? {
 
         // Loops throw all the files in the folder, I love Kotlin
         for (file in folderMain.walkBottomUp().filter { it.extension == "class" }) {
-            // TODO test this
-            if (main != null) throw MainClassException("Multiple main classes were detected!")
 
             // ASM ClassReader and Node to check for the annotation
             val classReader = ClassReader(file.readBytes())
@@ -67,6 +65,9 @@ internal fun File.findMainClass(): String? {
             if (classNode.invisibleAnnotations?.map { it.desc }?.find { BUKKIT_ANNOTATION in it } == null) {
                 continue
             }
+
+            // Tested now
+            if (main != null) throw MainClassException("Multiple main classes were detected!")
 
             main = classPath
         }
