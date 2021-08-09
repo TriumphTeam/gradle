@@ -32,15 +32,31 @@ fun DependencyHandler.nms(version: String = LATEST_VERSION_DEFAULT): String {
     return "org.spigotmc:spigot:$version-R0.1-SNAPSHOT"
 }
 
+// TODO separate this
 fun DependencyHandler.triumph(lib: String, version: String = LATEST_VERSION_DEFAULT): String {
     return when (lib) {
         "cmd", "cmds" -> "$OLD_GROUP.utils:matt-framework:$version"
         "gui" -> "$GROUP:triumph-gui:$version"
         "markdown", "md" -> "$OLD_GROUP:triumph-msg-adventure:$version"
         "config" -> "$OLD_GROUP:triumph-config:$version"
-        "core" -> "$GROUP:triumph-core:$version"
         else -> ""
     }
+}
+
+fun DependencyHandler.core(platform: CorePlatform, version: String): String {
+    return core(platform.name.toLowerCase(), version)
+}
+
+fun DependencyHandler.core(platform: String, version: String): String {
+    return "$GROUP:triumph-core-$platform:$version"
+}
+
+fun DependencyHandler.feature(feature: CoreFeature, version: String): String {
+    return feature("feature-${feature.name.toLowerCase()}", version)
+}
+
+fun DependencyHandler.feature(feature: String, version: String): String {
+    return "$GROUP:triumph-core-$feature:$version"
 }
 
 fun DependencyHandler.adventureApi(version: String = LATEST_VERSION_DEFAULT): String {

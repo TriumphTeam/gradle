@@ -3,7 +3,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.5.10"
+    kotlin("jvm") version "1.5.30-RC"
     `java-gradle-plugin`
     `maven-publish`
     `kotlin-dsl`
@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "me.mattstudios"
-version = "0.2.2"
+version = "0.2.3"
 
 repositories {
     mavenCentral()
