@@ -13,7 +13,7 @@ enum class MinecraftVersion(val version: String) {
 
 }
 
-enum class Platform(val repo: String) {
+enum class PlatformType(val repo: String) {
     BUKKIT("bukkit"),
     JDA("jda"),
     NONE(""),

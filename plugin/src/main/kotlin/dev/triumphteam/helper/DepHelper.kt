@@ -43,7 +43,7 @@ fun DependencyHandler.triumph(lib: String, version: String = LATEST_VERSION_DEFA
     }
 }
 
-fun DependencyHandler.core(platform: Platform, version: String): String {
+fun DependencyHandler.core(platform: PlatformType, version: String): String {
     return core(platform.repo, version)
 }
 
@@ -51,8 +51,8 @@ fun DependencyHandler.core(platform: String, version: String): String {
     return "$GROUP:triumph-core-$platform:$version"
 }
 
-fun DependencyHandler.feature(feature: Feature, platform: Platform = Platform.NONE, version: String): String {
-    if (platform == Platform.NONE) return feature(feature.repo, version)
+fun DependencyHandler.feature(feature: Feature, platform: PlatformType = PlatformType.NONE, version: String): String {
+    if (platform == PlatformType.NONE) return feature(feature.repo, version)
     return feature("${platform.repo}-${feature.repo}", version)
 }
 
