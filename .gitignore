@@ -10,3 +10,7 @@ plugin-test/
 *.iml
 
 gradle.properties
+
+# IntelliJ
+**/out/
+**/build/

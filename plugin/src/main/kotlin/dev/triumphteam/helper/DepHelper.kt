@@ -43,20 +43,21 @@ fun DependencyHandler.triumph(lib: String, version: String = LATEST_VERSION_DEFA
     }
 }
 
-fun DependencyHandler.core(platform: CorePlatform, version: String): String {
-    return core(platform.name.toLowerCase(), version)
+fun DependencyHandler.core(platform: Platform, version: String): String {
+    return core(platform.repo, version)
 }
 
 fun DependencyHandler.core(platform: String, version: String): String {
     return "$GROUP:triumph-core-$platform:$version"
 }
 
-fun DependencyHandler.feature(feature: CoreFeature, version: String): String {
-    return feature("feature-${feature.name.toLowerCase()}", version)
+fun DependencyHandler.feature(feature: Feature, platform: Platform = Platform.NONE, version: String): String {
+    if (platform == Platform.NONE) return feature(feature.repo, version)
+    return feature("${platform.repo}-${feature.repo}", version)
 }
 
 fun DependencyHandler.feature(feature: String, version: String): String {
-    return "$GROUP:triumph-core-$feature:$version"
+    return "$GROUP:triumph-core-feature-$feature:$version"
 }
 
 fun DependencyHandler.adventureApi(version: String = LATEST_VERSION_DEFAULT): String {

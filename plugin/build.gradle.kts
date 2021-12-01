@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "me.mattstudios"
-version = "0.2.3"
+version = "0.2.4"
 
 repositories {
     mavenCentral()
@@ -27,10 +27,10 @@ configurations["testImplementation"].extendsFrom(shadowImplementation)
 
 dependencies {
     shadowImplementation(kotlin("stdlib"))
-    shadowImplementation("org.ow2.asm:asm:9.1")
-    shadowImplementation("org.ow2.asm:asm-tree:9.1")
-    shadowImplementation("org.ow2.asm:asm-util:9.1")
-    shadowImplementation("org.ow2.asm:asm-commons:9.1")
+    shadowImplementation("org.ow2.asm:asm:9.2")
+    shadowImplementation("org.ow2.asm:asm-tree:9.2")
+    shadowImplementation("org.ow2.asm:asm-util:9.2")
+    shadowImplementation("org.ow2.asm:asm-commons:9.2")
     shadowImplementation("com.google.code.gson:gson:2.8.6")
 
     compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10")

@@ -8,16 +8,26 @@ enum class MinecraftVersion(val version: String) {
 
     // New
     V1_16_5("1.16.5"),
-    V1_17("1.17"),
+    V1_17_1("1.17.1"),
+    V1_18("1.18"),
 
 }
 
-enum class CorePlatform {
-    BUKKIT,
-    JDA,
+enum class Platform(val repo: String) {
+    BUKKIT("bukkit"),
+    JDA("jda"),
+    NONE(""),
 }
 
-enum class CoreFeature {
-    CONFIG,
-    LOCALE,
+enum class Library(val repo: String) {
+    CMDS("cmds"),
+    GUI("gui"),
+}
+
+enum class Feature(val repo: String) {
+    CONFIG("config"),
+    LOCALE("locale"),
+    SCHEDULER("scheduler"),
+    COMMANDS("commands"),
+    LISTENERS("listeners"),
 }
