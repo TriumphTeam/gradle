@@ -56,6 +56,10 @@ fun DependencyHandler.feature(feature: Feature, platform: PlatformType = Platfor
     return feature("${platform.repo}-${feature.repo}", version)
 }
 
+fun DependencyHandler.feature(feature: Feature, version: String): String {
+    return feature(feature.repo, version)
+}
+
 fun DependencyHandler.feature(feature: String, version: String): String {
     return "$GROUP:triumph-core-feature-$feature:$version"
 }
