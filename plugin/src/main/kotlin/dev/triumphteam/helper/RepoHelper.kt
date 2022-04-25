@@ -1,6 +1,7 @@
 package dev.triumphteam.helper
 
-import dev.triumphteam.constants.PERSONAL_REPOSITORY
+import dev.triumphteam.constants.PERSONAL_RELEASES
+import dev.triumphteam.constants.PERSONAL_SNAPSHOTS
 import org.gradle.api.artifacts.dsl.RepositoryHandler
 import org.gradle.api.artifacts.repositories.MavenArtifactRepository
 import org.gradle.kotlin.dsl.maven
@@ -22,5 +23,9 @@ fun RepositoryHandler.sonatype(): MavenArtifactRepository {
 }
 
 fun RepositoryHandler.triumph(): MavenArtifactRepository {
-    return maven(PERSONAL_REPOSITORY)
+    return maven(PERSONAL_RELEASES)
+}
+
+fun RepositoryHandler.triumphSnapshots(): MavenArtifactRepository {
+    return maven(PERSONAL_SNAPSHOTS)
 }

@@ -12,12 +12,12 @@ plugins {
 }
 
 group = "me.mattstudios"
-version = "0.2.6"
+version = "0.2.8"
 
 repositories {
     mavenCentral()
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-    maven("https://repo.mattstudios.me/artifactory/public")
+    maven("https://repo.triumphteam.dev/releases/")
     maven("https://jitpack.io")
 }
 

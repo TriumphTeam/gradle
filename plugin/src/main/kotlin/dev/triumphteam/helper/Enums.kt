@@ -10,7 +10,7 @@ enum class MinecraftVersion(val version: String) {
     V1_16_5("1.16.5"),
     V1_17_1("1.17.1"),
     V1_18("1.18"),
-
+    V1_18_1("1.18.1"),
 }
 
 enum class PlatformType(val repo: String) {

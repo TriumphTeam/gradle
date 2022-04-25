@@ -4,7 +4,8 @@ import dev.triumphteam.annotations.BukkitMain
 
 internal const val RESOURCES_TASK = "processResources"
 
-internal const val PERSONAL_REPOSITORY = "https://repo.triumphteam.dev/artifactory/public/"
+internal const val PERSONAL_RELEASES = "https://repo.triumphteam.dev/releases/"
+internal const val PERSONAL_SNAPSHOTS = "https://repo.triumphteam.dev/snapshots/"
 
 internal const val ANNOTATION_DEPENDENCY = "dev.triumphteam:triumph-gradle-annotations:0.0.1"
 
