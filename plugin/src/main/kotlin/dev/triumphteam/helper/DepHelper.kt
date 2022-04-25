@@ -61,7 +61,7 @@ fun DependencyHandler.feature(feature: Feature, version: String): String {
 }
 
 fun DependencyHandler.feature(feature: String, version: String): String {
-    return "$GROUP:triumph-core-feature-$feature:$version"
+    return "$GROUP:nebula-feature-$feature:$version"
 }
 
 fun DependencyHandler.adventureApi(version: String = LATEST_VERSION_DEFAULT): String {

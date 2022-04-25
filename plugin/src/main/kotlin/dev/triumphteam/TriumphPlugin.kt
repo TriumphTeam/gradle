@@ -1,7 +1,7 @@
 package dev.triumphteam
 
 import dev.triumphteam.constants.ANNOTATION_DEPENDENCY
-import dev.triumphteam.constants.PERSONAL_REPO
+import dev.triumphteam.constants.PERSONAL_RELEASES
 import dev.triumphteam.constants.RESOURCES_TASK
 import dev.triumphteam.exceptions.MainClassException
 import dev.triumphteam.extensions.BukkitExtension
@@ -31,7 +31,7 @@ class TriumphPlugin : Plugin<Project> {
         // Adds annotations to the project
         afterEvaluate {
             allprojects {
-                repositories.maven(PERSONAL_REPO)
+                repositories.maven(PERSONAL_RELEASES)
                 dependencies.add(
                     JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME,
                     ANNOTATION_DEPENDENCY
