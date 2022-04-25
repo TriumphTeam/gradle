@@ -3,6 +3,7 @@
 package dev.triumphteam.extensions
 
 import dev.triumphteam.extensions.components.CommandsBuilder
+import dev.triumphteam.extensions.components.DependencyBuilder
 import dev.triumphteam.extensions.components.PermissionsBuilder
 import org.gradle.api.Project
 
@@ -69,17 +70,9 @@ open class BukkitExtension(private val project: Project) {
             field = value
         }
 
-    var depend: List<String>? = null
-        set(value) {
-            used = true
-            field = value
-        }
+    private val depend = mutableListOf<String>()
 
-    var softdepend: List<String>? = null
-        set(value) {
-            used = true
-            field = value
-        }
+    private val softDepend = mutableListOf<String>()
 
     var loadbefore: List<String>? = null
         set(value) {
@@ -98,6 +91,14 @@ open class BukkitExtension(private val project: Project) {
             used = true
             field = value
         }
+
+    fun depends(depends: DependencyBuilder.() -> Unit) {
+        depend.addAll(DependencyBuilder().apply(depends).build())
+    }
+
+    fun softDepends(depends: DependencyBuilder.() -> Unit) {
+        softDepend.addAll(DependencyBuilder().apply(depends).build())
+    }
 
     fun commands(commands: CommandsBuilder.() -> Unit) {
         this.commands = CommandsBuilder().apply(commands)
@@ -118,9 +119,9 @@ open class BukkitExtension(private val project: Project) {
             add("author", author)
             add("authors", authors)
             add("website", website)
-            add("depend", depend)
+            if (depend.isNotEmpty()) add("depend", depend)
             add("prefix", prefix)
-            add("softdepend", softdepend)
+            if (depend.isNotEmpty()) add("softdepend", softDepend)
             add("loadbefore", loadbefore)
             add("commands", commands?.build())
             add("permissions", permissions?.build())

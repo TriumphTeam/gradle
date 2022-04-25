@@ -53,11 +53,11 @@ publishing {
     repositories {
         maven {
             credentials {
-                username repoUsername
-                password repoPassword
+                username = System.getenv("REPO_USER")
+                password = System.getenv("REPO_PASS")
             }
 
-            url = repoUrl
+            url = "https://repo.triumphteam.dev/public/"
         }
     }
 
