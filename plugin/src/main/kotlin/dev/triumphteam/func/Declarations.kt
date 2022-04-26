@@ -32,6 +32,7 @@ internal fun File.findMainClass(): String? {
 
     // Gets the classes folder
     val classesFolder = File(this, "classes")
+    if (!classesFolder.exists()) classesFolder.mkdirs()
     val classesFiles = classesFolder.listFiles() ?: throw FileNotFoundException("Cold not find classes folder!")
 
     // Loops here to check for folders like Java or Kotlin
