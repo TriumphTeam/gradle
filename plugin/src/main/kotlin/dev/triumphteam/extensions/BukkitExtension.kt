@@ -93,25 +93,29 @@ open class BukkitExtension(private val project: Project) {
         }
 
     fun depends(depends: DependencyBuilder.() -> Unit) {
+        used = true
         depend.addAll(DependencyBuilder().apply(depends).build())
     }
 
     fun softDepends(depends: DependencyBuilder.() -> Unit) {
+        used = true
         softDepend.addAll(DependencyBuilder().apply(depends).build())
     }
 
     fun commands(commands: CommandsBuilder.() -> Unit) {
+        used = true
         this.commands = CommandsBuilder().apply(commands)
     }
 
     fun permissions(commands: PermissionsBuilder.() -> Unit) {
+        used = true
         this.permissions = PermissionsBuilder().apply(commands)
     }
 
     internal fun build(main: String): Map<String, Any> {
         return buildMap {
             add("main", main)
-            add("name", name ?: project.name)
+            add("name", name ?: project.name.capitalize())
             add("version", version ?: project.version.toString())
             add("api-version", apiVersion)
             add("description", description)
@@ -121,7 +125,7 @@ open class BukkitExtension(private val project: Project) {
             add("website", website)
             if (depend.isNotEmpty()) add("depend", depend)
             add("prefix", prefix)
-            if (depend.isNotEmpty()) add("softdepend", softDepend)
+            if (softDepend.isNotEmpty()) add("softdepend", softDepend)
             add("loadbefore", loadbefore)
             add("commands", commands?.build())
             add("permissions", permissions?.build())
@@ -133,5 +137,4 @@ open class BukkitExtension(private val project: Project) {
             this[key] = it
         }
     }
-
 }

@@ -63,7 +63,7 @@ internal fun File.findMainClass(): String? {
 
             // If not a triumph plugin or not annotated, return
             if (!classNode.superName.contains("BukkitApplication")
-                || classNode.invisibleAnnotations?.map { it.desc }?.find { BUKKIT_ANNOTATION in it } == null
+                && classNode.invisibleAnnotations?.map { it.desc }?.find { BUKKIT_ANNOTATION in it } == null
             ) {
                 continue
             }

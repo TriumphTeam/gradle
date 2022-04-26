@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "me.mattstudios"
-version = "0.2.11"
+version = "0.3.1"
 
 repositories {
     mavenCentral()
@@ -133,6 +133,13 @@ afterEvaluate {
             withType<MavenPublication> {
                 if (name == "pluginMaven") {
                     setArtifacts(listOf(shadowJarTask.get()))
+                }
+
+                repositories {
+                    maven {
+                        name = "localPluginRepository"
+                        url = uri("C:/Users/xpsyk/OneDrive/Documents/test")
+                    }
                 }
             }
         }
