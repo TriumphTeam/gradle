@@ -11,7 +11,7 @@ class DependencyBuilder {
     }
 
     fun on(project: Project) {
-        depends.add(project.name)
+        depends.add(project.name.capitalize())
     }
 
     internal fun build(): MutableList<String> {
