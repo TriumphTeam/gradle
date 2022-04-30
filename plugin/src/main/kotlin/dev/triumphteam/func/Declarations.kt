@@ -2,6 +2,7 @@ package dev.triumphteam.func
 
 import dev.triumphteam.constants.BUKKIT_ANNOTATION
 import dev.triumphteam.exceptions.MainClassException
+import dev.triumphteam.nebula.ModularPlugin
 import org.gradle.api.logging.Logger
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.tree.ClassNode
@@ -62,14 +63,16 @@ internal fun File.findMainClass(): String? {
                 .replace(File.separator, ".")
                 .removeSuffix(".class")
 
+            val isAnnotated =
+                classNode.invisibleAnnotations?.map { it.desc }?.any { BUKKIT_ANNOTATION in it } == true
+
+            val isModularPlugin = ModularPlugin::class.java.simpleName in classNode.superName
+
             // If not a triumph plugin or not annotated, return
-            if (!classNode.superName.contains("BukkitApplication")
-                && classNode.invisibleAnnotations?.map { it.desc }?.find { BUKKIT_ANNOTATION in it } == null
-            ) {
+            if (!isAnnotated && !isModularPlugin) {
                 continue
             }
-
-            // Tested now
+            
             if (main != null) throw MainClassException("Multiple main classes were detected!")
 
             main = classPath

@@ -2,7 +2,6 @@ package dev.triumphteam
 
 import dev.triumphteam.constants.ANNOTATION_DEPENDENCY
 import dev.triumphteam.constants.PERSONAL_RELEASES
-import dev.triumphteam.constants.RESOURCES_TASK
 import dev.triumphteam.exceptions.MainClassException
 import dev.triumphteam.extensions.BukkitExtension
 import dev.triumphteam.func.createFileIfNotExists
@@ -11,7 +10,9 @@ import dev.triumphteam.func.info
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
+import org.gradle.jvm.tasks.Jar
 import org.gradle.kotlin.dsl.maven
+import org.gradle.kotlin.dsl.withType
 import org.yaml.snakeyaml.DumperOptions
 import org.yaml.snakeyaml.Yaml
 import java.nio.file.Paths
@@ -62,6 +63,8 @@ class TriumphPlugin : Plugin<Project> {
 
         }
 
-        tasks.findByName(RESOURCES_TASK)?.finalizedBy(buildPlugin)
+        tasks.withType<Jar>().forEach {
+            it.setDependsOn(listOf(buildPlugin))
+        }
     }
 }

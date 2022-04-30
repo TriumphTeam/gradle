@@ -12,12 +12,13 @@ plugins {
 }
 
 group = "me.mattstudios"
-version = "0.3.3"
+version = "0.3.4"
 
 repositories {
     mavenCentral()
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://repo.triumphteam.dev/releases/")
+    maven("https://repo.triumphteam.dev/snapshots/")
     maven("https://jitpack.io")
 }
 
@@ -37,6 +38,7 @@ dependencies {
     testImplementation("io.kotlintest:kotlintest-runner-junit5:3.1.10")
 
     shadowImplementation("dev.triumphteam:triumph-gradle-annotations:0.0.1")
+    shadowImplementation("dev.triumphteam:nebula-bukkit:1.0.0-SNAPSHOT")
     shadowImplementation("org.yaml:snakeyaml:1.29")
 }
 
