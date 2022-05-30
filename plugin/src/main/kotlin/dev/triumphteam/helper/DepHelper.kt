@@ -32,7 +32,7 @@ fun DependencyHandler.nms(version: String = LATEST_VERSION_DEFAULT): String {
     return "org.spigotmc:spigot:$version-R0.1-SNAPSHOT"
 }
 
-// TODO separate this
+@Deprecated("Use the individual functions for each lib")
 fun DependencyHandler.triumph(lib: String, version: String = LATEST_VERSION_DEFAULT): String {
     return when (lib) {
         "cmd", "cmds" -> "$OLD_GROUP.utils:matt-framework:$version"
@@ -41,6 +41,22 @@ fun DependencyHandler.triumph(lib: String, version: String = LATEST_VERSION_DEFA
         "config" -> "$OLD_GROUP:triumph-config:$version"
         else -> ""
     }
+}
+
+fun DependencyHandler.commands(platform: String, version: String = LATEST_VERSION_DEFAULT): String {
+    return "$GROUP:triumph-cmd-$platform:$version"
+}
+
+fun DependencyHandler.gui(version: String = LATEST_VERSION_DEFAULT): String {
+    return "$GROUP:triumph-gui:$version"
+}
+
+fun DependencyHandler.markdown(platform: String, version: String = LATEST_VERSION_DEFAULT): String {
+    return "$OLD_GROUP:triumph-msg-$platform:$version"
+}
+
+fun DependencyHandler.config(version: String = LATEST_VERSION_DEFAULT): String {
+    return "$OLD_GROUP:triumph-config:$version"
 }
 
 fun DependencyHandler.core(platform: PlatformType, version: String): String {
