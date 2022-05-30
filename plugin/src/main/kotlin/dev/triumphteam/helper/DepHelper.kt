@@ -24,13 +24,9 @@ fun DependencyHandler.paper(version: String = LATEST_VERSION_DEFAULT): String {
 
 fun DependencyHandler.spigot(version: MinecraftVersion) = spigot(version.version)
 
-fun DependencyHandler.spigot(version: String = LATEST_VERSION_DEFAULT): String {
-    return "org.spigotmc:spigot-api:$version-R0.1-SNAPSHOT"
-}
+fun DependencyHandler.spigot(version: String = LATEST_VERSION_DEFAULT) = "org.spigotmc:spigot-api:$version-R0.1-SNAPSHOT"
 
-fun DependencyHandler.nms(version: String = LATEST_VERSION_DEFAULT): String {
-    return "org.spigotmc:spigot:$version-R0.1-SNAPSHOT"
-}
+fun DependencyHandler.nms(version: String = LATEST_VERSION_DEFAULT) = "org.spigotmc:spigot:$version-R0.1-SNAPSHOT"
 
 @Deprecated("Use the individual functions for each lib")
 fun DependencyHandler.triumph(lib: String, version: String = LATEST_VERSION_DEFAULT): String {
@@ -43,51 +39,29 @@ fun DependencyHandler.triumph(lib: String, version: String = LATEST_VERSION_DEFA
     }
 }
 
-fun DependencyHandler.commands(platform: String, version: String = LATEST_VERSION_DEFAULT): String {
-    return "$GROUP:triumph-cmd-$platform:$version"
-}
+fun DependencyHandler.commands(platform: String, version: String = LATEST_VERSION_DEFAULT) = "$GROUP:triumph-cmd-$platform:$version"
 
-fun DependencyHandler.gui(version: String = LATEST_VERSION_DEFAULT): String {
-    return "$GROUP:triumph-gui:$version"
-}
+fun DependencyHandler.gui(version: String = LATEST_VERSION_DEFAULT) = "$GROUP:triumph-gui:$version"
 
-fun DependencyHandler.markdown(platform: String, version: String = LATEST_VERSION_DEFAULT): String {
-    return "$OLD_GROUP:triumph-msg-$platform:$version"
-}
+fun DependencyHandler.markdown(platform: String, version: String = LATEST_VERSION_DEFAULT) = "$OLD_GROUP:triumph-msg-$platform:$version"
 
-fun DependencyHandler.config(version: String = LATEST_VERSION_DEFAULT): String {
-    return "$OLD_GROUP:triumph-config:$version"
-}
+fun DependencyHandler.config(version: String = LATEST_VERSION_DEFAULT) = "$OLD_GROUP:triumph-config:$version"
 
-fun DependencyHandler.core(platform: PlatformType, version: String): String {
-    return core(platform.repo, version)
-}
+fun DependencyHandler.core(platform: PlatformType, version: String) = core(platform.repo, version)
 
-fun DependencyHandler.core(platform: String, version: String): String {
-    return "$GROUP:triumph-core-$platform:$version"
-}
+fun DependencyHandler.core(platform: String, version: String) = "$GROUP:triumph-core-$platform:$version"
 
 fun DependencyHandler.feature(feature: Feature, platform: PlatformType = PlatformType.NONE, version: String): String {
     if (platform == PlatformType.NONE) return feature(feature.repo, version)
     return feature("${platform.repo}-${feature.repo}", version)
 }
 
-fun DependencyHandler.feature(feature: Feature, version: String): String {
-    return feature(feature.repo, version)
-}
+fun DependencyHandler.feature(feature: Feature, version: String) = feature(feature.repo, version)
 
-fun DependencyHandler.feature(feature: String, version: String): String {
-    return "$GROUP:nebula-feature-$feature:$version"
-}
+fun DependencyHandler.feature(feature: String, version: String) = "$GROUP:nebula-feature-$feature:$version"
 
-fun DependencyHandler.adventureApi(version: String = LATEST_VERSION_DEFAULT): String {
-    return "net.kyori:adventure-api:$version"
-}
+fun DependencyHandler.adventureApi(version: String = LATEST_VERSION_DEFAULT) = "net.kyori:adventure-api:$version"
 
-fun DependencyHandler.adventure(platform: String, version: String = LATEST_VERSION_DEFAULT): String {
-    return "net.kyori:adventure-platform-$platform:$version"
-}
+fun DependencyHandler.adventure(platform: String, version: String = LATEST_VERSION_DEFAULT) = "net.kyori:adventure-platform-$platform:$version"
 
-fun DependencyHandler.papi(version: String = LATEST_VERSION_DEFAULT): String {
-    return "me.clip:placeholderapi:$version"
-}
+fun DependencyHandler.papi(version: String = LATEST_VERSION_DEFAULT) = "me.clip:placeholderapi:$version"
